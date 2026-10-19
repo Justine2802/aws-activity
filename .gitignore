@@ -1,0 +1,5 @@
+/vendor/
+/.serverless/
+/.env
+/.env.*
+!/data/.gitkeep

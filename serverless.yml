@@ -1,0 +1,30 @@
+service: payroll-api
+
+provider:
+    name: aws
+    region: ${env:AWS_REGION, 'us-east-1'}
+    environment:
+        PAYSLIPS_BUCKET: ${env:PAYSLIPS_BUCKET, 'payroll-esguerra'}
+    iam:
+        role:
+            statements:
+                - Effect: Allow
+                  Action:
+                      - s3:PutObject
+                  Resource: arn:aws:s3:::${env:PAYSLIPS_BUCKET, 'payroll-esguerra'}/payslips/*
+
+plugins:
+    - ./vendor/bref/bref
+
+package:
+    patterns:
+        - '!data/**'
+        - 'data/*.csv'
+
+functions:
+    api:
+        handler: lambda.php
+        runtime: php-84
+        timeout: 28
+        events:
+            - httpApi: '*'
